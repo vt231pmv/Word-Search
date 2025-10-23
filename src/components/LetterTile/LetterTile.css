@@ -2,12 +2,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 80px;
-    height: 80px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     background-color: #ffffff;
+
     border: 2px solid #e2e8f0;
-    border-radius: 8px;
     font-size: 24px;
+
+    border-radius: 8px;
     font-weight: bold;
     color: #2d3748;
     cursor: pointer;
@@ -20,20 +22,15 @@
 }
 
 .letter-tile.selected {
-    background-color: #68d391;
+    background-color: #68d391; /* Зелений */
     color: white;
     transform: scale(1.05);
     border-color: #38a169;
 }
 
 @media (max-width: 600px) {
-    .word-grid {
-        max-width: 100%;
-        gap: 6px;
-        padding: 10px;
-    }
-
     .letter-tile {
         font-size: 18px;
     }
 }
+
