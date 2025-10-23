@@ -1,6 +1,5 @@
 // --- Утиліта для генерації ігрового поля ---
 
-const SIZE = 5; // 5x5
 const DIRECTIONS = [
     { r: 0, c: 1 },
     { r: 1, c: 0 },
@@ -11,24 +10,30 @@ function getRandomLetter() {
     return alphabet[Math.floor(Math.random() * alphabet.length)];
 }
 
-
-function placeWords(grid, words) {
+function placeWords(grid, words, size) {
+    const placedWords = [];
     for (const word of words) {
+        if (word.length > size) {
+            console.warn(`Word "${word}" is too long for grid size ${size} and was skipped.`);
+            continue;
+        }
+
         let placed = false;
         let attempts = 0;
 
         while (!placed && attempts < 50) {
             attempts++;
             const direction = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
-            const rStart = Math.floor(Math.random() * SIZE);
-            const cStart = Math.floor(Math.random() * SIZE);
+            const rStart = Math.floor(Math.random() * size);
+            const cStart = Math.floor(Math.random() * size);
 
             let r = rStart;
             let c = cStart;
             let fits = true;
 
             for (let i = 0; i < word.length; i++) {
-                if (r < 0 || r >= SIZE || c < 0 || c >= SIZE || (grid[r][c] !== null && grid[r][c] !== word[i])) {
+
+                if (r < 0 || r >= size || c < 0 || c >= size || (grid[r][c] !== null && grid[r][c] !== word[i])) {
                     fits = false;
                     break;
                 }
@@ -45,38 +50,38 @@ function placeWords(grid, words) {
                     c += direction.c;
                 }
                 placed = true;
+                placedWords.push(word);
             }
         }
-
-        if (!placed) {
-            console.warn(`Не вдалося розмістити слово: ${word}. Повторна генерація поля...`);
-            return false;
-        }
     }
-    return true;
+    return { grid, placedWords };
 }
 
-export function generateGrid(words) {
+export function generateGrid(words, size = 5) {
     let grid;
     let success = false;
-    let maxAttempts = 20;
+    let mainAttempts = 0;
 
+    while (!success && mainAttempts < 10) {
+        mainAttempts++;
+        let newGrid = Array(size).fill(null).map(() => Array(size).fill(null));
+        const result = placeWords(newGrid, words, size);
 
-    do {
-        maxAttempts--;
-        grid = Array(SIZE).fill(null).map(() => Array(SIZE).fill(null));
-
-        success = placeWords(grid, words);
-
-        if (maxAttempts <= 0) {
-            console.error("Не вдалося згенерувати поле. Перевірте кількість та довжину слів.");
-            return Array(SIZE * SIZE).fill('X');
+        if (result.placedWords.length === words.length) {
+            success = true;
+            grid = result.grid;
         }
+    }
 
-    } while (!success);
+    if (!success) {
+        console.error("Failed to place all words after 10 attempts. Check settings.");
+        let newGrid = Array(size).fill(null).map(() => Array(size).fill(null));
+        const result = placeWords(newGrid, words, size);
+        grid = result.grid;
+    }
 
-    for (let r = 0; r < SIZE; r++) {
-        for (let c = 0; c < SIZE; c++) {
+    for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
             if (grid[r][c] === null) {
                 grid[r][c] = getRandomLetter();
             }

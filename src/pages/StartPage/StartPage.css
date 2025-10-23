@@ -4,3 +4,11 @@
     margin-bottom: 30px;
 }
 
+.start-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 250px;
+}
+

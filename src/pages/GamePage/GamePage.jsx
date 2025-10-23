@@ -1,11 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import WordGrid from '../../components/WordGrid/WordGrid';
 import WordList from '../../components/WordList/WordList';
-import { useWordSearch } from '../../hooks/useWordSearch';
 import Button from '../../components/Button/Button';
+import Modal from '../../components/Modal/Modal';
+import { useWordSearch } from '../../hooks/useWordSearch';
+import { useSettings } from '../../context/SettingsContext';
 import './GamePage.css';
 
-const GamePage = ({ onGameEnd }) => {
+// Сторінка гри
+const GamePage = ({ onGameEnd, onBackToMenu }) => {
+    const { settings } = useSettings();
+    const [showWinModal, setShowWinModal] = useState(false);
+
     const {
         grid,
         words,
@@ -15,7 +21,10 @@ const GamePage = ({ onGameEnd }) => {
         isGameWon,
         startGame,
         eventHandlers
-    } = useWordSearch();
+    } = useWordSearch({
+        gridSize: settings.gridSize,
+        wordCount: settings.wordCount,
+    });
 
     useEffect(() => {
         startGame();
@@ -23,12 +32,22 @@ const GamePage = ({ onGameEnd }) => {
 
     useEffect(() => {
         if (isGameWon) {
-            onGameEnd({
-                time: formattedTime,
-                words: foundWords.length
-            });
+            setShowWinModal(true);
         }
-    }, [isGameWon, onGameEnd, formattedTime, foundWords.length]);
+    }, [isGameWon]);
+
+    const handleCloseModal = () => {
+        setShowWinModal(false);
+        onGameEnd({
+            time: formattedTime,
+            words: foundWords.length
+        });
+    };
+
+    const handleRestartGame = () => {
+        setShowWinModal(false);
+        startGame();
+    };
 
     return (
         <div className="page-container game-page">
@@ -37,10 +56,10 @@ const GamePage = ({ onGameEnd }) => {
                 <span>Час: <strong>{formattedTime}</strong></span>
             </div>
 
-            {/* Передаємо обробники подій на все поле */}
             <div
                 onMouseUp={eventHandlers.onMouseUp}
                 onMouseLeave={eventHandlers.onMouseUp}
+                style={{ '--grid-size': settings.gridSize }}
             >
                 <WordGrid
                     grid={grid}
@@ -54,15 +73,31 @@ const GamePage = ({ onGameEnd }) => {
                 foundWords={foundWords}
             />
 
-            {   }
             <div className="game-controls">
                 <Button onClick={startGame} variant="secondary">
                     Перезапустити
                 </Button>
+                {/* --- нова кнопка --- */}
+                <Button onClick={onBackToMenu} variant="secondary">
+                    Повернутись в меню
+                </Button>
             </div>
+
+            {/* Рендеримо модальне вікно, якщо гра виграна */}
+            {showWinModal && (
+                <Modal
+                    title="🎉 Вітаємо! 🎉"
+                    onClose={handleCloseModal}
+                    onRestartGame={handleRestartGame}
+                >
+                    <p>Ви знайшли всі слова!</p>
+                    <p>Ваш час: <strong>{formattedTime}</strong></p>
+                </Modal>
+            )}
         </div>
     );
 };
 
 export default GamePage;
+
 
