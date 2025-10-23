@@ -1,13 +1,16 @@
 import React from 'react';
 import './WordList.css';
 
-const WordList = ({ wordsPlaceholder }) => {
+const WordList = ({ wordsToFind, foundWords }) => {
     return (
         <div className="word-list-container">
             <h3>Слова для пошуку:</h3>
             <ul className="word-list">
-                {wordsPlaceholder.map((word, index) => (
-                    <li key={index} className="word-item">
+                {wordsToFind.map((word, index) => (
+                    <li
+                        key={index}
+                        className={`word-item ${foundWords.includes(word) ? 'found' : ''}`}
+                    >
                         {word}
                     </li>
                 ))}
@@ -17,3 +20,4 @@ const WordList = ({ wordsPlaceholder }) => {
 };
 
 export default WordList;
+
