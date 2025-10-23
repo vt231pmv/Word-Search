@@ -29,4 +29,13 @@
     background-color: #e2e8f0;
     padding: 5px 15px;
     border-radius: 20px;
+    transition: all 0.2s;
 }
+
+/* Новий стиль для знайдених слів */
+.word-item.found {
+    background-color: #a0aec0; /* Сірий */
+    color: #f7fafc;
+    text-decoration: line-through;
+}
+

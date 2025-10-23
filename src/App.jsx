@@ -12,12 +12,14 @@ const PAGES = {
 
 function App() {
     const [currentPage, setCurrentPage] = useState(PAGES.START);
+    const [gameResults, setGameResults] = useState({ time: '00:00', words: 0 });
 
     const handleStartGame = () => {
         setCurrentPage(PAGES.GAME);
     };
 
-    const handleGameEnd = () => {
+    const handleGameEnd = (results) => {
+        setGameResults(results);
         setCurrentPage(PAGES.RESULTS);
     };
 
@@ -30,7 +32,7 @@ function App() {
             case PAGES.GAME:
                 return <GamePage onGameEnd={handleGameEnd} />;
             case PAGES.RESULTS:
-                return <ResultsPage onPlayAgain={handlePlayAgain} />;
+                return <ResultsPage onPlayAgain={handlePlayAgain} results={gameResults} />;
             case PAGES.START:
             default:
                 return <StartPage onStartGame={handleStartGame} />;

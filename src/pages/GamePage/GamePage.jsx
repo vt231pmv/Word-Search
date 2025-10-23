@@ -1,28 +1,63 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import WordGrid from '../../components/WordGrid/WordGrid';
 import WordList from '../../components/WordList/WordList';
+import { useWordSearch } from '../../hooks/useWordSearch';
 import Button from '../../components/Button/Button';
 import './GamePage.css';
 
 const GamePage = ({ onGameEnd }) => {
-    const gridPlaceholder = "ABCDEFGHIJKLMNOPQRSTUVWXY".split('');
-    const wordsPlaceholder = ['REACT', 'GAME', 'CODE', 'WORD'];
-    const wordsFound = 0;
-    const time = '00:00';
+    const {
+        grid,
+        words,
+        foundWords,
+        selection,
+        formattedTime,
+        isGameWon,
+        startGame,
+        eventHandlers
+    } = useWordSearch();
+
+    useEffect(() => {
+        startGame();
+    }, [startGame]);
+
+    useEffect(() => {
+        if (isGameWon) {
+            onGameEnd({
+                time: formattedTime,
+                words: foundWords.length
+            });
+        }
+    }, [isGameWon, onGameEnd, formattedTime, foundWords.length]);
 
     return (
         <div className="page-container game-page">
             <div className="game-info">
-                <span>Слів знайдено: <strong>{wordsFound} / {wordsPlaceholder.length}</strong></span>
-                <span>Час: <strong>{time}</strong></span>
+                <span>Слів знайдено: <strong>{foundWords.length} / {words.length}</strong></span>
+                <span>Час: <strong>{formattedTime}</strong></span>
             </div>
 
-            <WordGrid gridPlaceholder={gridPlaceholder} />
-            <WordList wordsPlaceholder={wordsPlaceholder} />
+            {/* Передаємо обробники подій на все поле */}
+            <div
+                onMouseUp={eventHandlers.onMouseUp}
+                onMouseLeave={eventHandlers.onMouseUp}
+            >
+                <WordGrid
+                    grid={grid}
+                    selection={selection}
+                    eventHandlers={eventHandlers}
+                />
+            </div>
 
+            <WordList
+                wordsToFind={words}
+                foundWords={foundWords}
+            />
+
+            {   }
             <div className="game-controls">
-                <Button onClick={onGameEnd}>
-                    Завершити (Тест ЛР №1)
+                <Button onClick={startGame} variant="secondary">
+                    Перезапустити
                 </Button>
             </div>
         </div>
