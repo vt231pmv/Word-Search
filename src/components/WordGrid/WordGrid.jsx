@@ -1,10 +1,15 @@
 import React from 'react';
 import LetterTile from '../LetterTile/LetterTile';
-import './WordGrid.css';
 
 const WordGrid = ({ grid, selection, eventHandlers }) => {
     return (
-        <div className="word-grid">
+        <div
+            className="grid gap-1.5 sm:gap-2 p-2 sm:p-3 bg-gray-300 rounded-lg w-full max-w-xl mx-auto"
+            style={{
+                gridTemplateColumns: `repeat(var(--grid-size, 5), 1fr)`,
+                gridTemplateRows: `repeat(var(--grid-size, 5), 1fr)`,
+            }}
+        >
             {grid.map((letter, index) => (
                 <LetterTile
                     key={index}

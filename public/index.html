@@ -4,19 +4,33 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Word Search Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#48bb78',
+                        secondary: '#a0aec0',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        body {
+            @apply bg-gray-100 font-sans;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        #root {
+            @apply w-full min-h-screen flex justify-center items-center p-4;
+        }
+    </style>
 </head>
 <body>
 <noscript>You need to enable JavaScript to run this app.</noscript>
-
-<!-- Основний контейнер для React-додатку -->
 <div id="root"></div>
-
-<!--
-  Окремий контейнер для модальних вікон.
-  Він знаходиться поза #root, щоб уникнути проблем з z-index.
--->
 <div id="modal-root"></div>
-
 </body>
 </html>
 
