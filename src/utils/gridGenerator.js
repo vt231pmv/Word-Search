@@ -32,7 +32,6 @@ function placeWords(grid, words, size) {
             let fits = true;
 
             for (let i = 0; i < word.length; i++) {
-
                 if (r < 0 || r >= size || c < 0 || c >= size || (grid[r][c] !== null && grid[r][c] !== word[i])) {
                     fits = false;
                     break;
@@ -58,27 +57,9 @@ function placeWords(grid, words, size) {
 }
 
 export function generateGrid(words, size = 5) {
-    let grid;
-    let success = false;
-    let mainAttempts = 0;
+    let newGrid = Array(size).fill(null).map(() => Array(size).fill(null));
 
-    while (!success && mainAttempts < 10) {
-        mainAttempts++;
-        let newGrid = Array(size).fill(null).map(() => Array(size).fill(null));
-        const result = placeWords(newGrid, words, size);
-
-        if (result.placedWords.length === words.length) {
-            success = true;
-            grid = result.grid;
-        }
-    }
-
-    if (!success) {
-        console.error("Failed to place all words after 10 attempts. Check settings.");
-        let newGrid = Array(size).fill(null).map(() => Array(size).fill(null));
-        const result = placeWords(newGrid, words, size);
-        grid = result.grid;
-    }
+    const { grid, placedWords } = placeWords(newGrid, words, size);
 
     for (let r = 0; r < size; r++) {
         for (let c = 0; c < size; c++) {
@@ -88,6 +69,6 @@ export function generateGrid(words, size = 5) {
         }
     }
 
-    return grid.flat();
+    return { grid: grid.flat(), placedWords: placedWords };
 }
 

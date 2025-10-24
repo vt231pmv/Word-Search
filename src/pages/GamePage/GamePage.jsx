@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import WordGrid from '../../components/WordGrid/WordGrid';
 import WordList from '../../components/WordList/WordList';
 import Button from '../../components/Button/Button';
 import Modal from '../../components/Modal/Modal';
 import { useWordSearch } from '../../hooks/useWordSearch';
 import { useSettings } from '../../context/SettingsContext';
-import './GamePage.css';
 
-// Сторінка гри
-const GamePage = ({ onGameEnd, onBackToMenu }) => {
+const GamePage = () => {
     const { settings } = useSettings();
+    const navigate = useNavigate();
     const [showWinModal, setShowWinModal] = useState(false);
 
     const {
@@ -38,10 +38,7 @@ const GamePage = ({ onGameEnd, onBackToMenu }) => {
 
     const handleCloseModal = () => {
         setShowWinModal(false);
-        onGameEnd({
-            time: formattedTime,
-            words: foundWords.length
-        });
+        navigate('/');
     };
 
     const handleRestartGame = () => {
@@ -50,13 +47,21 @@ const GamePage = ({ onGameEnd, onBackToMenu }) => {
     };
 
     return (
-        <div className="page-container game-page">
-            <div className="game-info">
-                <span>Слів знайдено: <strong>{foundWords.length} / {words.length}</strong></span>
-                <span>Час: <strong>{formattedTime}</strong></span>
+        <div className="w-full flex flex-col items-center">
+            {/* Верхня панель  */}
+            {/*  */}
+            <div className="flex justify-between w-full max-w-xl mx-auto mb-4 px-2">
+                <div className="text-lg font-semibold text-gray-700">
+                    Слів: <span className="font-bold text-green-600">{foundWords.length} / {words.length}</span>
+                </div>
+                <div className="text-lg font-semibold text-gray-700">
+                    Час: <span className="font-bold text-gray-900">{formattedTime}</span>
+                </div>
             </div>
 
+            {/* Ігрове поле */}
             <div
+                className="w-full touch-none"
                 onMouseUp={eventHandlers.onMouseUp}
                 onMouseLeave={eventHandlers.onMouseUp}
                 style={{ '--grid-size': settings.gridSize }}
@@ -68,30 +73,31 @@ const GamePage = ({ onGameEnd, onBackToMenu }) => {
                 />
             </div>
 
+            {/* Список слів */}
             <WordList
                 wordsToFind={words}
                 foundWords={foundWords}
             />
 
-            <div className="game-controls">
+            {/* Кнопки керування */}
+            <div className="w-full max-w-xs flex flex-col sm:flex-row gap-3 mt-6">
                 <Button onClick={startGame} variant="secondary">
                     Перезапустити
                 </Button>
-                {/* --- нова кнопка --- */}
-                <Button onClick={onBackToMenu} variant="secondary">
-                    Повернутись в меню
+                <Button onClick={() => navigate('/')} variant="secondary">
+                    На головну
                 </Button>
             </div>
 
-            {/* Рендеримо модальне вікно, якщо гра виграна */}
+            {/* Модальне вікно перемоги */}
             {showWinModal && (
                 <Modal
                     title="🎉 Вітаємо! 🎉"
                     onClose={handleCloseModal}
                     onRestartGame={handleRestartGame}
                 >
-                    <p>Ви знайшли всі слова!</p>
-                    <p>Ваш час: <strong>{formattedTime}</strong></p>
+                    <p>Ви знайшли всі {words.length} слова!</p>
+                    <p>Ваш час: <strong className="text-xl text-gray-800">{formattedTime}</strong></p>
                 </Modal>
             )}
         </div>
@@ -99,5 +105,4 @@ const GamePage = ({ onGameEnd, onBackToMenu }) => {
 };
 
 export default GamePage;
-
 

@@ -1,14 +1,17 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { generateGrid } from '../utils/gridGenerator';
 
-const ALL_WORDS = ['МРІЯ', 'НЕБО', 'КОД', 'СЛОВО', 'ГРА', 'ЛІТО', 'ЗИМА', 'СВІТ', 'МИР', 'РІКА', 'ГОРА', 'МОВА'];
-
+const ALL_WORDS = [
+    'МРІЯ', 'НЕБО', 'КОД', 'СЛОВО', 'ГРА', 'ЛІТО', 'ЗИМА', 'СВІТ', 'МИР', 'РІКА', 'ГОРА', 'МОВА',
+    'СОНЦЕ', 'МІСТО', 'ДЕНЬ', 'НІЧ', 'ВОДА', 'ЗЕМЛЯ', 'ХЛІБ', 'СІЛЬ', 'ДІМ', 'КІТ',
+    'ПЕС', 'ДУБ', 'ЛИС', 'МЕД', 'ЧАС', 'РІК', 'СИН', 'ДОЩ', 'СНІГ',
+    'ДЕРЕВО', 'ПОЛЕ', 'ЛЮБОВ', 'МАТИ', 'БАТЬКО', 'ДИТИНА', 'ШКОЛА', 'КНИГА', 'РУКА', 'НОГА',
+    'ОКО', 'ВУХО', 'ЗОРЯ', 'ПІСНЯ', 'ДУША', 'ВІТЕР', 'ВОГОНЬ', 'ДРУГ'
+];
 export const useWordSearch = ({ gridSize = 5, wordCount = 4 }) => {
     const [grid, setGrid] = useState([]);
 
-    const [words, setWords] = useState(() =>
-        [...ALL_WORDS].sort(() => 0.5 - Math.random()).slice(0, wordCount)
-    );
+    const [words, setWords] = useState([]);
 
     const [foundWords, setFoundWords] = useState([]);
     const [selection, setSelection] = useState([]);
@@ -18,11 +21,14 @@ export const useWordSearch = ({ gridSize = 5, wordCount = 4 }) => {
     const [isGameActive, setIsGameActive] = useState(false);
     const [isGameWon, setIsGameWon] = useState(false);
 
+    // Ініціалізація гри
     const startGame = useCallback(() => {
-        const newWords = [...ALL_WORDS].sort(() => 0.5 - Math.random()).slice(0, wordCount);
-        setWords(newWords);
+        const requestedWords = [...ALL_WORDS].sort(() => 0.5 - Math.random()).slice(0, wordCount);
 
-        setGrid(generateGrid(newWords, gridSize));
+        const { grid: newGrid, placedWords } = generateGrid(requestedWords, gridSize);
+
+        setWords(placedWords);
+        setGrid(newGrid);
 
         setFoundWords([]);
         setSelection([]);
@@ -41,6 +47,7 @@ export const useWordSearch = ({ gridSize = 5, wordCount = 4 }) => {
         return () => clearInterval(interval);
     }, [isGameActive]);
 
+    // Ефект для перевірки перемоги
     useEffect(() => {
         if (words.length > 0 && foundWords.length === words.length) {
             setIsGameWon(true);

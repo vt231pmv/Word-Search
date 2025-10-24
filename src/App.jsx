@@ -1,52 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Routes, Route, Outlet } from 'react-router-dom';
 import StartPage from './pages/StartPage/StartPage';
 import GamePage from './pages/GamePage/GamePage';
-import ResultsPage from './pages/ResultsPage/ResultsPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
-import './App.css';
 
-const PAGES = {
-    START: 'start',
-    GAME: 'game',
-    RESULTS: 'results',
-    SETTINGS: 'settings',
-};
+function PageLayout() {
+    return (
+        <div className="bg-white p-6 sm:p-10 rounded-2xl shadow-xl text-center flex flex-col items-center w-full max-w-lg mx-auto">
+            <Outlet /> {/* Тут будуть рендеритись сторінки */}
+        </div>
+    );
+}
 
 function App() {
-    const [currentPage, setCurrentPage] = useState(PAGES.START);
-    const [gameResults, setGameResults] = useState({ time: '00:00', words: 0 });
-
-    const goToStart = () => setCurrentPage(PAGES.START);
-    const goToSettings = () => setCurrentPage(PAGES.SETTINGS);
-    const handleStartGame = () => setCurrentPage(PAGES.GAME);
-
-    const handleGameEnd = (results) => {
-        setGameResults(results);
-
-        goToStart();
-    };
-
-    const renderPage = () => {
-        switch (currentPage) {
-            case PAGES.GAME:
-                return <GamePage onGameEnd={handleGameEnd} onBackToMenu={goToStart} />;
-            case PAGES.RESULTS:
-
-                return <ResultsPage onPlayAgain={goToStart} results={gameResults} />;
-            case PAGES.SETTINGS:
-                return <SettingsPage onBackToStart={goToStart} />;
-            case PAGES.START:
-            default:
-                return <StartPage onStartGame={handleStartGame} onGoToSettings={goToSettings} />;
-        }
-    };
 
     return (
-        <div className="app">
-            <main>
-                {renderPage()}
-            </main>
-        </div>
+        <Routes>
+            {/* Всі сторінки будуть обгорнуті в PageLayout */}
+            <Route path="/" element={<PageLayout />}>
+                {/* Головна сторінка */}
+                <Route index element={<StartPage />} />
+                {/* Сторінка гри */}
+                <Route path="game" element={<GamePage />} />
+                {/* Сторінка налаштувань */}
+                <Route path="settings" element={<SettingsPage />} />
+            </Route>
+            {/* можна додати 404 сторінку */}
+            <Route path="*" element={<div>Сторінку не знайдено</div>} />
+        </Routes>
     );
 }
 
