@@ -5,10 +5,12 @@ import WordList from '../../components/WordList/WordList';
 import Button from '../../components/Button/Button';
 import Modal from '../../components/Modal/Modal';
 import { useWordSearch } from '../../hooks/useWordSearch';
-import { useSettings } from '../../context/SettingsContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { addScore } from '../../store/slices/leaderboardSlice';
 
 const GamePage = () => {
-    const { settings } = useSettings();
+    const settings = useSelector((state) => state.settings);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [showWinModal, setShowWinModal] = useState(false);
 
@@ -38,19 +40,31 @@ const GamePage = () => {
 
     const handleCloseModal = () => {
         setShowWinModal(false);
+
+        dispatch(addScore({
+            time: formattedTime,
+            gridSize: settings.gridSize,
+            wordCount: words.length,
+        }));
+
         navigate('/');
     };
 
     const handleRestartGame = () => {
         setShowWinModal(false);
+
+        dispatch(addScore({
+            time: formattedTime,
+            gridSize: settings.gridSize,
+            wordCount: words.length,
+        }));
+
         startGame();
     };
 
     return (
-        <div className="w-full flex flex-col items-center">
-            {/* Верхня панель  */}
-            {/*  */}
-            <div className="flex justify-between w-full max-w-xl mx-auto mb-4 px-2">
+        <div className="w-full flex flex-col items-center max-w-xl"> {/* Збільшив max-w */}
+            <div className="flex justify-between w-full mx-auto mb-4 px-2">
                 <div className="text-lg font-semibold text-gray-700">
                     Слів: <span className="font-bold text-green-600">{foundWords.length} / {words.length}</span>
                 </div>
@@ -59,7 +73,6 @@ const GamePage = () => {
                 </div>
             </div>
 
-            {/* Ігрове поле */}
             <div
                 className="w-full touch-none"
                 onMouseUp={eventHandlers.onMouseUp}
@@ -73,13 +86,11 @@ const GamePage = () => {
                 />
             </div>
 
-            {/* Список слів */}
             <WordList
                 wordsToFind={words}
                 foundWords={foundWords}
             />
 
-            {/* Кнопки керування */}
             <div className="w-full max-w-xs flex flex-col sm:flex-row gap-3 mt-6">
                 <Button onClick={startGame} variant="secondary">
                     Перезапустити
@@ -89,7 +100,6 @@ const GamePage = () => {
                 </Button>
             </div>
 
-            {/* Модальне вікно перемоги */}
             {showWinModal && (
                 <Modal
                     title="🎉 Вітаємо! 🎉"
