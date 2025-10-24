@@ -1,21 +1,27 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useSettings } from '../../context/SettingsContext';
 import Button from '../../components/Button/Button';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSettings } from '../../store/slices/settingsSlice';
 
 const SettingsPage = () => {
-    const { settings, setSettings } = useSettings();
-    const navigate = useNavigate(); // Ініціалізуємо хук
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const currentSettings = useSelector((state) => state.settings);
+
     const { register, handleSubmit } = useForm({
-        defaultValues: settings
+        defaultValues: currentSettings
     });
 
     const onSubmit = (data) => {
-        setSettings({
+        const newSettings = {
             gridSize: parseInt(data.gridSize, 10),
             wordCount: parseInt(data.wordCount, 10),
-        });
+        };
+        dispatch(setSettings(newSettings));
+
         alert('Налаштування збережено!');
         navigate('/');
     };
@@ -25,7 +31,6 @@ const SettingsPage = () => {
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Налаштування гри</h2>
             <form className="w-full max-w-xs flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
 
-                {/* Група для Розміру поля */}
                 <div className="flex flex-col text-left">
                     <label htmlFor="gridSize" className="text-base font-semibold text-gray-700 mb-2">
                         Розмір поля:
@@ -41,7 +46,6 @@ const SettingsPage = () => {
                     </select>
                 </div>
 
-                {/* Група для Кількості слів */}
                 <div className="flex flex-col text-left">
                     <label htmlFor="wordCount" className="text-base font-semibold text-gray-700 mb-2">
                         Кількість слів:
@@ -61,7 +65,7 @@ const SettingsPage = () => {
                     <Button type="submit" variant="primary">
                         Зберегти
                     </Button>
-                    <Button onClick={() => navigate('/')} variant="secondary">
+                    <Button type="button" onClick={() => navigate('/')} variant="secondary">
                         Назад
                     </Button>
                 </div>

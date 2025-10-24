@@ -1,18 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { SettingsProvider } from './context/SettingsContext';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        {/* Обгортаємо додаток у Роутер та Провайдер */}
-        <BrowserRouter>
-            <SettingsProvider>
+        {/* обгортаємо все у провайдер Redux і передаємо йому store */}
+        <Provider store={store}>
+            <BrowserRouter>
+                {/* SettingsProvider не потрібен */}
                 <App />
-            </SettingsProvider>
-        </BrowserRouter>
+            </BrowserRouter>
+        </Provider>
     </React.StrictMode>
 );
 

@@ -10,10 +10,13 @@ const StartPage = () => {
                 Знайдіть усі слова, заховані в сітці з літер!
             </p>
 
-            {/* Використовуємо Link замість кнопок з onClick */}
             <div className="w-full max-w-xs flex flex-col gap-4">
                 <Link to="/game">
                     <Button variant="primary">Почати гру</Button>
+                </Link>
+                {/* Додаємо нову кнопку для таблиці результатів */}
+                <Link to="/leaderboard">
+                    <Button variant="secondary">Таблиця Результатів</Button>
                 </Link>
                 <Link to="/settings">
                     <Button variant="secondary">Налаштування</Button>
