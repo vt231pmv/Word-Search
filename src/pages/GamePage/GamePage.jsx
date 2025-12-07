@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import WordGrid from '../../components/WordGrid/WordGrid';
-import WordList from '../../components/WordList/WordList';
-import Button from '../../components/Button/Button';
-import Modal from '../../components/Modal/Modal';
+import WordGrid from '../../components/Game/WordGrid/WordGrid';
+import WordList from '../../components/Game/WordList/WordList';
+import Button from '../../components/UI/Button/Button';
+import Modal from '../../components/UI/Modal/Modal';
 import { useWordSearch } from '../../hooks/useWordSearch';
 import { useSelector, useDispatch } from 'react-redux';
 import { addScore } from '../../store/slices/leaderboardSlice';

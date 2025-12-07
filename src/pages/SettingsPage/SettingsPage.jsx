@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import Button from '../../components/Button/Button';
+import Button from '../../components/UI/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSettings } from '../../store/slices/settingsSlice';
