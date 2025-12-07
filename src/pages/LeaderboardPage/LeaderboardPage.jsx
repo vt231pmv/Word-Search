@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearScores } from '../../store/slices/leaderboardSlice';
-import Button from '../../components/Button/Button';
+import Button from '../../components/UI/Button/Button';
 import { Link } from 'react-router-dom';
 
 const LeaderboardPage = () => {

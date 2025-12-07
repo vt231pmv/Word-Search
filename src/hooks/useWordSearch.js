@@ -1,14 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { generateGrid } from '../utils/gridGenerator';
-
-const ALL_WORDS = [
-    'МРІЯ', 'НЕБО', 'КОД', 'СЛОВО', 'ГРА', 'ЛІТО', 'ЗИМА', 'СВІТ', 'МИР', 'РІКА',
-    'ГОРА', 'МОВА', 'ЧАС', 'СИН', 'ДІМ', 'ЛЮБОВ', 'НАДІЯ', 'ВІРА', 'ДУША', 'СЕРЦЕ',
-    'ПІСНЯ', 'КНИГА', 'ШКОЛА', 'ДРУГ', 'ВОЛЯ', 'ЗЕМЛЯ', 'ВОДА', 'СОНЦЕ', 'МІСЯЦЬ', 'ЗІРКА',
-    'КВІТКА', 'ДЕРЕВО', 'ПТАХ', 'РИБА', 'ЗВІР', 'ЛЮДИНА', 'ДИТИНА', 'МАТИ', 'БАТЬКО',
-    'УКРАЇНА', 'КИЇВ', 'КОЗАК', 'СТЕП', 'ПОЛЕ', 'ХЛІБ', 'СІЛЬ', 'БОРЩ', 'САЛО', 'ВЕСНА'
-];
-
+import { ALL_WORDS } from '../data/words';
 
 export const useWordSearch = ({ gridSize = 5, wordCount = 4 }) => {
     const [grid, setGrid] = useState([]);
@@ -17,7 +9,6 @@ export const useWordSearch = ({ gridSize = 5, wordCount = 4 }) => {
 
     const [selection, setSelection] = useState([]);
     const [isSelecting, setIsSelecting] = useState(false);
-
     const [selectionDirection, setSelectionDirection] = useState(null);
 
     const getCoords = useCallback((index) => ({
@@ -33,7 +24,6 @@ export const useWordSearch = ({ gridSize = 5, wordCount = 4 }) => {
         const newWordsPool = [...ALL_WORDS].sort(() => 0.5 - Math.random());
 
         const wordsToPlace = newWordsPool.slice(0, wordCount);
-
         const { grid: newGrid, placedWords } = generateGrid(wordsToPlace, gridSize, wordCount);
 
         setWords(placedWords);
@@ -63,7 +53,6 @@ export const useWordSearch = ({ gridSize = 5, wordCount = 4 }) => {
             setIsGameActive(false);
         }
     }, [foundWords, words]);
-
 
 
     const handleMouseDown = (index) => {
@@ -134,4 +123,3 @@ export const useWordSearch = ({ gridSize = 5, wordCount = 4 }) => {
         }
     };
 };
-
